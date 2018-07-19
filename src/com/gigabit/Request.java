@@ -22,13 +22,14 @@ public class Request extends Thread {
     @Override
     public void run() {
 
-        System.out.println("thread start");
+        //System.out.println("thread start");
         ArrayList<String> dlink = new ArrayList<>();
         ArrayList<String> edgeCore = new ArrayList<>();
         ArrayList<String> alcatel = new ArrayList<>();
         ArrayList<String> huawei = new ArrayList<>();
         ArrayList<String> olt = new ArrayList<>();
         ArrayList<String> other = new ArrayList<>();
+        ArrayList<String> Unknown = new ArrayList<>();
 
         for (String currentIP : ip) {
 
@@ -57,6 +58,20 @@ public class Request extends Thread {
                     String[] res = s.split(":");
                     olt.add(res[0] + ";ma5608t;up");
                 }
+                else if (s.contains("ProCurve")){
+                    String[] res = s.split(":");
+                    other.add(res[0] + ";hp;up");
+                }
+
+                else if (s.contains("SMC")){
+                    String[] res = s.split(":");
+                    other.add(res[0] + ";smc;up");
+                }
+
+                else if (s.contains("Cisco")){
+                    String[] res = s.split(":");
+                    other.add(res[0] + ";cisco;up");
+                }
 
                 else if (s.contains("BDCOM")) {
                     String[] res = s.split(":");
@@ -64,7 +79,7 @@ public class Request extends Thread {
                 }
 
                 else {
-                    other.add(s);
+                    Unknown.add(s);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -78,6 +93,7 @@ public class Request extends Thread {
             Main.routerdbCreator("Huawei", huawei);
             Main.routerdbCreator("Olt", olt);
             Main.routerdbCreator("Other", other);
+            Main.routerdbCreator("Unknown", Unknown);
         } catch (IOException e) {
             e.printStackTrace();
         }

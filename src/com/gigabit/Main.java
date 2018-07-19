@@ -106,7 +106,7 @@ public class Main  {
         FileWriter fileWriter = new FileWriter(filename, true);
         for (String s : arrayList) {
             fileWriter.write(s);
-            System.out.println(s);
+            //System.out.println(s);
             fileWriter.write(System.lineSeparator());
         }
         fileWriter.close();

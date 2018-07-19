@@ -13,6 +13,8 @@ public class Request extends Thread {
     private String port;
     private ArrayList<String> ip;
 
+    private ArrayList<String> result = new ArrayList<>();
+
     public Request(String oidValue, int snmpVersion, String community, String port, ArrayList<String> ip){
         this.oidValue = oidValue;
         this.snmpVersion = snmpVersion;
@@ -26,12 +28,21 @@ public class Request extends Thread {
 
         for (String currentIP : ip) {
 
-            System.out.println("Current IP: " + currentIP);
             try {
-                checkOid(community, snmpVersion, currentIP, port, oidValue);
+                String s = checkOid(community, snmpVersion, currentIP, port, oidValue);
+                System.out.println(s);
+                result.add(s);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public ArrayList<String> getResult() {
+        return result;
+    }
+
+    public void setResult(ArrayList<String> result) {
+        this.result = result;
     }
 }

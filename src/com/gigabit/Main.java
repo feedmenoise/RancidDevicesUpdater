@@ -15,18 +15,25 @@ public class Main  {
 
     public static void main(String[] args) throws Exception
     {
-        String oidValue  = ".1.3.6.1.2.1.1.1.0";
-        int snmpVersion  = SnmpConstants.version1;
-        String community  = args[1];
+
+        ArrayList<String> mgmtIPs780 = createMgmtIPs(args[0]);
+        ArrayList<String> mgmtIPs783 = createMgmtIPs(args[1]);
+        ArrayList<String> mgmtIPs2275 = createMgmtIPs(args[2]);
+
+        String oidValue = ".1.3.6.1.2.1.1.1.0";
+        int snmpVersion = SnmpConstants.version1;
+        String community = "megapublic";
         String port = "161";
 
-        ArrayList<String> ip = createMgmtIPs(args[0]);
 
-        for (String currentIP : ip) {
+        Request mgmt780 = new Request(oidValue, snmpVersion, community, port, mgmtIPs780);
+        Request mgmt783 = new Request(oidValue, snmpVersion, community, port, mgmtIPs783);
+        Request mgmt2275 = new Request(oidValue, snmpVersion, community, port, mgmtIPs2275);
 
-            System.out.println("Current IP: " + currentIP);
-            checkOid(community, snmpVersion, currentIP, port, oidValue);
-        }
+        mgmt780.start();
+        mgmt783.start();
+        mgmt2275.start();
+
     }
 
     private static ArrayList<String> createMgmtIPs(String template){
@@ -41,7 +48,7 @@ public class Main  {
         return arrayList;
     }
 
-    private static void checkOid (String community, int snmpVersion, String ipAddress, String port, String oidValue) throws IOException {
+    static void checkOid(String community, int snmpVersion, String ipAddress, String port, String oidValue) throws IOException {
         // Create TransportMapping and Listen
         TransportMapping<UdpAddress> transport = new DefaultUdpTransportMapping();
         transport.listen();

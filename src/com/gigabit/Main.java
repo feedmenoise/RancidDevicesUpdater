@@ -1,5 +1,6 @@
 package com.gigabit;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.snmp4j.CommunityTarget;
@@ -20,17 +21,17 @@ public class Main  {
         String community = args[0];
         String port = "161";
 
-        if (args[1] != null) {
+        if (args.length > 1) {
             ArrayList<String> mgmtIPs780 = createMgmtIPs(args[1]);
             Request mgmt780 = new Request(oidValue, snmpVersion, community, port, mgmtIPs780);
             mgmt780.start();
 
-            if (args[2] != null) {
+            if (args.length > 2) {
                 ArrayList<String> mgmtIPs783 = createMgmtIPs(args[2]);
                 Request mgmt783 = new Request(oidValue, snmpVersion, community, port, mgmtIPs783);
                 mgmt783.start();
 
-                if (args[3] != null) {
+                if (args.length > 3) {
                     ArrayList<String> mgmtIPs2275 = createMgmtIPs(args[3]);
                     Request mgmt2275 = new Request(oidValue, snmpVersion, community, port, mgmtIPs2275);
                     mgmt2275.start();
@@ -100,61 +101,14 @@ public class Main  {
         return result;
     }
 
-    static void sortByVendors(ArrayList<String> arrayList) {
+    static void routerdbCreator(String filename, ArrayList<String> arrayList) throws IOException {
 
-        ArrayList<String> dlink = new ArrayList<>();
-        ArrayList<String> edgeCore = new ArrayList<>();
-        ArrayList<String> alcatel = new ArrayList<>();
-        ArrayList<String> huawei = new ArrayList<>();
-        ArrayList<String> olt = new ArrayList<>();
-        ArrayList<String> other = new ArrayList<>();
-
+        FileWriter fileWriter = new FileWriter(filename, true);
         for (String s : arrayList) {
-            if (s.contains("D-Link") || s.contains("DES") || s.contains("DGS")) {
-                String[] res = s.split(":");
-                dlink.add(res[0] + ";dlink;up");
-
-            }
-            else if (s.contains("ES3510") || s.contains("ES3528M") || s.contains("ES3526XA") || s.contains("ES3528MV2")) {
-                String[] res = s.split(":");
-                edgeCore.add(res[0] + ";edgecore;up");
-            }
-            else if (s.contains("Alcatel") || s.contains("OmniStack")) {
-                String[] res = s.split(":");
-                alcatel.add(res[0] + ";alcatel;up");
-            }
-            else if (s.contains("S3328TP-EI-24S") || s.contains("S2326TP-EI")) {
-                String[] res = s.split(":");
-                huawei.add(res[0] + ";huawei;up");
-            }
-
-            else if (s.contains("Huawei Integrated Access Software")) {
-                String[] res = s.split(":");
-                olt.add(res[0] + ";ma5608t;up");
-            }
-
-            else if (s.contains("BDCOM")) {
-                String[] res = s.split(":");
-                olt.add(res[0] + ";bdcom;up");
-            }
-
-            else {
-                other.add(s);
-            }
+            fileWriter.write(s);
+            System.out.println(s);
+            fileWriter.write(System.lineSeparator());
         }
-
-        System.out.println(dlink);
-        System.out.println("--------------------------");
-        System.out.println(edgeCore);
-        System.out.println("--------------------------");
-        System.out.println(alcatel);
-        System.out.println("--------------------------");
-        System.out.println(huawei);
-        System.out.println("--------------------------");
-        System.out.println(olt);
-        System.out.println("--------------------------");
-        System.out.println(other);
+        fileWriter.close();
     }
-
-
 }

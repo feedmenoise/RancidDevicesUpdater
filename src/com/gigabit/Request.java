@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.gigabit.Main.checkOid;
+import static com.gigabit.Main.sortByVendors;
 
 public class Request extends Thread {
 
@@ -26,16 +27,20 @@ public class Request extends Thread {
     @Override
     public void run() {
 
+        System.out.println("thread start");
         for (String currentIP : ip) {
 
             try {
                 String s = checkOid(community, snmpVersion, currentIP, port, oidValue);
-                System.out.println(s);
+                //System.out.println(s);
                 result.add(s);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
+        sortByVendors(result);
+
     }
 
     public ArrayList<String> getResult() {
